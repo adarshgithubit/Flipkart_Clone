@@ -1,4 +1,5 @@
 import { Dialog ,TextField,Box, Typography,Button,styled} from '@mui/material'
+import {useState} from "react";
 import React from 'react'
 
 const Component = styled(Box)`
@@ -54,32 +55,77 @@ color:#2874f0;
 cursor:pointer;
 `
 
+const AccountInitialValue={
+   login: {
+    view:"login",
+    heading:"Login",
+    subHeading:"Get access to your Orders, Wishlist and Recommendations"
+   },
+   signUp: {
+    view: "signUp",
+    heading:"Looks Like You Are New Here!",
+    subHeading:"Sign up with your mobile number to get started"
+   }
+}
 
+const SignUpInitialValue = {
+      fName:"",
+      email:"",
+      mobNo:"",
+      userName:"",
+      password:"",
+}
 
 const LoginDiloug = ({open,setOpen}) => {
    
   const handleClose = ()=>{
-        setOpen(false)
+        setOpen(false);
+        toggleAccount(AccountInitialValue.login);
     }
+  const [account, toggleAccount]=useState(AccountInitialValue.login);
+
+  const toggleSignUp=()=>{
+    toggleAccount(AccountInitialValue.signUp)
+  }
+   
+  const [signUp, setSignUp]=useState(SignUpInitialValue)
+  const onInputChange =(e)=>{
+    setSignUp({...signUp, [e.target.name]: e.target.value})
+    console.log(signUp);
+  }
+
+
   return (
     <>
     <Dialog open={open}  onClose={handleClose}>
       <Component>
         <Box style={{display:"flex", height:"100%"}}>
           <Image>
-          <Typography variant="h5">Login</Typography>
-          <Typography style={{marginTop:"15px"}}>Get access to your Orders, Wishlist and Recommendations</Typography>
+          <Typography variant="h5">{account.heading}</Typography>
+          <Typography style={{marginTop:"15px"}}>{account.subHeading}</Typography>
 
           </Image>
-      <Wrapper>
-          <TextField label="Enter E-mail/Mobile Number" variant="standard" />
+    {    account.view === "login" ?
+        <Wrapper>
+        <TextField label="Enter E-mail/Mobile Number" variant="standard" />
           <TextField  label="Enter Password" variant="standard" />
           <Typography>By continuing, you agree to Flipkart's Terms of Use and Privacy Policy.</Typography>
           <LogBtn>Login</LogBtn>
           <Typography style={{textAlign:"center"}}>OR</Typography>
           <OtpBt>Request OTP</OtpBt>
-          <CreatAcn>New to Flipkart? Create an account</CreatAcn>
-       </Wrapper>
+          <CreatAcn onClick={()=>toggleSignUp()}>New to Flipkart? Create an account</CreatAcn>
+        </Wrapper>
+        :
+        <Wrapper>
+          <TextField label="Enter Your Name" name='fName' onChange={(e)=> onInputChange(e)} variant="standard" />
+          <TextField  label="Enter your E-Mail" name='email' onChange={(e)=> onInputChange(e) }variant="standard" />
+          <TextField label="Enter Mobile Number" name='mobNo' onChange={(e)=> onInputChange(e)}  variant="standard" />
+          <TextField label="Creat UserName " name='userName' onChange={(e)=> onInputChange(e)}  variant="standard" />
+          <TextField label="Enter Password" name='password'  onChange={(e)=> onInputChange(e)} variant="standard" />
+          <OtpBt>Continue</OtpBt>
+         
+        </Wrapper>
+    }
        </Box>
        </Component>
     </Dialog>
